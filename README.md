@@ -1,28 +1,50 @@
-# Welcome to React Router!
+# Buat SQL - Database Diagram Builder
 
-A modern, production-ready template for building full-stack React applications using React Router.
+Buat SQL is a powerful, local-first database diagram builder inspired by DrawSQL. It allows developers to visualize schemas, manage relationships, and export SQL scripts directly from their browser with a sleek, premium interface.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
+## 🚀 Key Features
 
-## Features
+- **Interactive ERD Builder**: Effortlessly create and organize database tables with a intuitive drag-and-drop interface.
+- **Visual Relationships**: Define foreign key relationships visually with smart arrow routing.
+- **Column & Enum Management**: Powerful dialogs for adding and editing columns, types, and custom enumerations.
+- **SQL Schema Export**: Export your diagrams instantly to PostgreSQL, MySQL, and SQLite dialects.
+- **Local Persistence**: All your diagrams are stored locally using SQLite and Drizzle ORM.
+- **Premium Design**: Built with a modern, glassmorphic aesthetic using Tailwind CSS and Radix UI.
 
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
+## 🛠️ Tech Stack
 
-## Getting Started
+- **Framework**: [React Router 7](https://reactrouter.com/)
+- **ORM**: [Drizzle ORM](https://orm.drizzle.team/)
+- **Database**: [SQLite](https://sqlite.org/) (via `better-sqlite3`)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **UI Components**: [Radix UI](https://www.radix-ui.com/) & [shadcn/ui](https://ui.shadcn.com/)
+- **Utilities**: `lucide-react`, `react-xarrows`, `react-draggable`
+
+## 🏁 Getting Started
+
+### Prerequisites
+
+- Node.js (v20 or later recommended)
+- npm or pnpm
 
 ### Installation
 
-Install the dependencies:
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd buat-sql
+   ```
 
-```bash
-npm install
-```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Setup the database:
+   ```bash
+   # This will create the local sqlite.db and apply migrations
+   npx drizzle-kit migrate
+   ```
 
 ### Development
 
@@ -34,54 +56,31 @@ npm run dev
 
 Your application will be available at `http://localhost:5173`.
 
-## Building for Production
+## 📦 Deployment
 
-Create a production build:
+### Production Build
+
+Create a production-ready build:
 
 ```bash
 npm run build
 ```
 
-## Deployment
+The output will be located in the `build/` directory, separated into `client/` and `server/`.
 
-### Docker Deployment
+### Docker
 
-To build and run using Docker:
+A `Dockerfile` is included for containerized deployment. To build and run:
 
 ```bash
-docker build -t my-app .
-
-# Run the container
-docker run -p 3000:3000 my-app
+docker build -t buat-sql .
+docker run -p 3000:3000 buat-sql
 ```
 
-The containerized application can be deployed to any platform that supports Docker, including:
+## 📄 License
 
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
-
-### DIY Deployment
-
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
-```
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
+This project is open-source and available under the MIT License.
 
 ---
 
-Built with ❤️ using React Router.
+Built with ❤️ for developers who love clean architecture.
