@@ -12,8 +12,7 @@ import { AddTableDialog } from "~/components/diagram/add-table-dialog";
 import { AddEnumDialog } from "~/components/diagram/add-enum-dialog";
 import { EnumNode } from "~/components/diagram/enum-node";
 
-import { CONFIG } from "~/lib/utils";
-
+import { useDiagramCanvas } from "~/hooks/use-diagram-canvas";
 import { addTableAction } from "~/actions/diagram/add-table";
 import { updateTableAction } from "~/actions/diagram/update-table";
 import { deleteTableAction } from "~/actions/diagram/delete-table";
@@ -81,92 +80,25 @@ export async function action({ request, params }: ActionFunctionArgs) {
 }
 
 export default function DiagramEditor() {
-    const TABLE_WIDTH = CONFIG.TABLE_WIDTH;
-    const TABLE_HEIGHT = CONFIG.TABLE_HEIGHT;
-
     const { diagram, tables, columns, relations, enums, enumValues } = useLoaderData<typeof loader>();
     const fetcher = useFetcher();
     const [arrowUpdateTrigger, setArrowUpdateTrigger] = useState(0);
 
     const [sourceTableId, setSourceTableId] = useState<string>("");
     const [targetTableId, setTargetTableId] = useState<string>("");
-    const [scale, setScale] = useState(1);
-    const [pan, setPan] = useState({ x: 0, y: 0 });
-    const [isPanning, setIsPanning] = useState(false);
-    const [hasInitialized, setHasInitialized] = useState(false);
-    const canvasRef = useRef<HTMLDivElement>(null!);
-    const lastMousePos = useRef({ x: 0, y: 0 });
 
-    useEffect(() => {
-        if (hasInitialized || tables.length === 0) return;
-
-        const canvas = canvasRef.current;
-        if (!canvas) return;
-
-        const minX = Math.min(...tables.map(t => t.x));
-        const maxX = Math.max(...tables.map(t => t.x + TABLE_WIDTH));
-        const minY = Math.min(...tables.map(t => t.y));
-        const maxY = Math.max(...tables.map(t => t.y + TABLE_HEIGHT));
-
-        const centerX = (minX + maxX) / 2;
-        const centerY = (minY + maxY) / 2;
-
-        const canvasRect = canvas.getBoundingClientRect();
-        const viewCenterX = canvasRect.width / 2;
-        const viewCenterY = canvasRect.height / 2;
-
-        setPan({
-            x: viewCenterX - centerX,
-            y: viewCenterY - centerY
-        });
-        setHasInitialized(true);
-    }, [tables, hasInitialized]);
-
-    const handleZoomIn = () => setScale(s => Math.min(s + 0.1, 2));
-    const handleZoomOut = () => setScale(s => Math.max(s - 0.1, 0.5));
-    const handleResetZoom = () => {
-        setScale(1);
-        if (tables.length > 0 && canvasRef.current) {
-            const minX = Math.min(...tables.map(t => t.x));
-            const maxX = Math.max(...tables.map(t => t.x + TABLE_WIDTH));
-            const minY = Math.min(...tables.map(t => t.y));
-            const maxY = Math.max(...tables.map(t => t.y + TABLE_HEIGHT));
-            const centerX = (minX + maxX) / 2;
-            const centerY = (minY + maxY) / 2;
-            const canvasRect = canvasRef.current.getBoundingClientRect();
-            setPan({
-                x: canvasRect.width / 2 - centerX,
-                y: canvasRect.height / 2 - centerY
-            });
-        } else {
-            setPan({ x: 0, y: 0 });
-        }
-    };
-
-    const handleCanvasMouseDown = (e: React.MouseEvent) => {
-        const target = e.target as HTMLElement;
-
-        if (target.closest('[role="dialog"]') ||
-            target.closest('[data-radix-popper-content-wrapper]') ||
-            target.closest('[data-radix-portal]') ||
-            target.closest('.drag-handle') ||
-            target.closest('.enum-handle') ||
-            target.closest('button') ||
-            target.closest('.no-pan')) {
-            return;
-        }
-
-        setIsPanning(true);
-        lastMousePos.current = { x: e.clientX, y: e.clientY };
-    };
-
-    const handleCanvasMouseMove = (e: React.MouseEvent) => {
-        if (!isPanning) return;
-        const dx = e.clientX - lastMousePos.current.x;
-        const dy = e.clientY - lastMousePos.current.y;
-        setPan(prev => ({ x: prev.x + dx, y: prev.y + dy }));
-        lastMousePos.current = { x: e.clientX, y: e.clientY };
-    };
+    const {
+        scale,
+        pan,
+        isPanning,
+        canvasRef,
+        handleZoomIn,
+        handleZoomOut,
+        handleResetZoom,
+        handleCanvasMouseDown,
+        handleCanvasMouseMove,
+        setIsPanning
+    } = useDiagramCanvas(tables);
 
     const handleStop = (e: any, data: any, id: string) => {
         const isEnum = enums.some(en => en.id === id);
@@ -179,66 +111,8 @@ export default function DiagramEditor() {
     const sourceColumns = sourceTableId ? columns.filter(c => c.tableId === sourceTableId) : [];
     const targetColumns = targetTableId ? columns.filter(c => c.tableId === targetTableId) : [];
 
-    const scaleRef = useRef(scale);
-    const panRef = useRef(pan);
-
-    useEffect(() => {
-        scaleRef.current = scale;
-        panRef.current = pan;
-    }, [scale, pan]);
-
-    useEffect(() => {
-        const handleGlobalMouseUp = () => {
-            setIsPanning(false);
-        };
-
-        window.addEventListener('mouseup', handleGlobalMouseUp);
-        return () => window.removeEventListener('mouseup', handleGlobalMouseUp);
-    }, []);
-
     const updateArrows = useCallback(() => {
         setArrowUpdateTrigger(t => t + 1);
-    }, []);
-
-    useEffect(() => {
-        const canvas = canvasRef.current;
-        if (!canvas) return;
-
-        const onWheel = (e: WheelEvent) => {
-            if (e.ctrlKey) {
-                e.preventDefault();
-                e.stopPropagation();
-            } else {
-                e.preventDefault();
-                e.stopImmediatePropagation();
-            }
-
-            const currentScale = scaleRef.current;
-            const currentPan = panRef.current;
-
-            const zoomSensitivity = 0.001;
-            const delta = -e.deltaY * zoomSensitivity;
-
-            const newScale = Math.min(Math.max(0.1, currentScale + delta), 3);
-
-            const rect = canvas.getBoundingClientRect();
-            const mouseX = e.clientX - rect.left;
-            const mouseY = e.clientY - rect.top;
-
-            const worldX = (mouseX - currentPan.x) / currentScale;
-            const worldY = (mouseY - currentPan.y) / currentScale;
-
-            const newPanX = mouseX - worldX * newScale;
-            const newPanY = mouseY - worldY * newScale;
-
-            setScale(newScale);
-            setPan({ x: newPanX, y: newPanY });
-        };
-
-        canvas.addEventListener('wheel', onWheel, { passive: false });
-        return () => {
-            canvas.removeEventListener('wheel', onWheel);
-        };
     }, []);
 
     return (
