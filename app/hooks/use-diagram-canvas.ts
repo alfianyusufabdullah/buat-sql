@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { CONFIG } from "~/lib/utils";
 
 interface Node {
@@ -52,10 +52,10 @@ export function useDiagramCanvas(tables: Node[], enums: Node[] = []) {
         setHasInitialized(true);
     }, [tables, enums, hasInitialized, TABLE_WIDTH, TABLE_HEIGHT]);
 
-    const handleZoomIn = () => setScale(s => Math.min(s + 0.1, 2));
-    const handleZoomOut = () => setScale(s => Math.max(s - 0.1, 0.5));
+    const handleZoomIn = useCallback(() => setScale(s => Math.min(s + 0.1, 2)), []);
+    const handleZoomOut = useCallback(() => setScale(s => Math.max(s - 0.1, 0.5)), []);
 
-    const handleResetZoom = () => {
+    const handleResetZoom = useCallback(() => {
         setScale(1);
         const allNodes = [...tables, ...enums];
         if (allNodes.length > 0 && canvasRef.current) {
@@ -73,9 +73,9 @@ export function useDiagramCanvas(tables: Node[], enums: Node[] = []) {
         } else {
             setPan({ x: 0, y: 0 });
         }
-    };
+    }, [tables, enums, TABLE_WIDTH, TABLE_HEIGHT]);
 
-    const handleCanvasMouseDown = (e: React.MouseEvent) => {
+    const handleCanvasMouseDown = useCallback((e: React.MouseEvent) => {
         const target = e.target as HTMLElement;
 
         if (target.closest('[role="dialog"]') ||
@@ -90,15 +90,15 @@ export function useDiagramCanvas(tables: Node[], enums: Node[] = []) {
 
         setIsPanning(true);
         lastMousePos.current = { x: e.clientX, y: e.clientY };
-    };
+    }, []);
 
-    const handleCanvasMouseMove = (e: React.MouseEvent) => {
+    const handleCanvasMouseMove = useCallback((e: React.MouseEvent) => {
         if (!isPanning) return;
         const dx = e.clientX - lastMousePos.current.x;
         const dy = e.clientY - lastMousePos.current.y;
         setPan(prev => ({ x: prev.x + dx, y: prev.y + dy }));
         lastMousePos.current = { x: e.clientX, y: e.clientY };
-    };
+    }, [isPanning]);
 
     useEffect(() => {
         const handleGlobalMouseUp = () => {
