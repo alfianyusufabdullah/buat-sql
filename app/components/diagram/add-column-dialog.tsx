@@ -40,7 +40,7 @@ export function AddColumnDialog({
             }
         }}>
             <DialogTrigger asChild>
-                <Button variant="ghost" size="sm" className="w-full mt-2 h-7 text-xs text-muted-foreground hover:bg-slate-100 border border-dashed border-transparent hover:border-slate-200">
+                <Button variant="ghost" size="sm" className="w-full mt-2 h-7 text-xs text-muted-foreground dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 border border-dashed border-transparent hover:border-slate-200 dark:hover:border-slate-700 transition-all">
                     <Plus className="mr-1 h-3 w-3" /> Add Column
                 </Button>
             </DialogTrigger>

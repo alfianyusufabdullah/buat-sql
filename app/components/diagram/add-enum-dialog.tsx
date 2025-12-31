@@ -20,7 +20,7 @@ export function AddEnumDialog({ fetcher: propFetcher }: AddEnumDialogProps) {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-8 text-xs font-medium text-slate-700 hover:bg-white hover:shadow-sm">
+                <Button variant="outline" size="sm" className="h-9 gap-2 font-medium border-slate-200 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 transition-all">
                     <ListPlus className="mr-2 h-4 w-4" /> Add ENUM
                 </Button>
             </DialogTrigger>

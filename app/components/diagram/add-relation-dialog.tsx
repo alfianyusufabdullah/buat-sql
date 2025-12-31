@@ -38,7 +38,7 @@ export function AddRelationDialog({
                                 <Label>Source Table</Label>
                                 <select
                                     name="fromTableId"
-                                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground dark:bg-slate-900 dark:border-slate-700"
                                     value={sourceTableId}
                                     onChange={(e) => setSourceTableId(e.target.value)}
                                     required
@@ -49,7 +49,7 @@ export function AddRelationDialog({
                             </div>
                             <div className="space-y-2">
                                 <Label>Source Column</Label>
-                                <select name="fromColumnId" className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" required disabled={!sourceTableId}>
+                                <select name="fromColumnId" className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground dark:bg-slate-900 dark:border-slate-700" required disabled={!sourceTableId}>
                                     <option value="">Select Column</option>
                                     {sourceColumns.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                                 </select>
@@ -60,7 +60,7 @@ export function AddRelationDialog({
                                 <Label>Target Table</Label>
                                 <select
                                     name="toTableId"
-                                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground dark:bg-slate-900 dark:border-slate-700"
                                     value={targetTableId}
                                     onChange={(e) => setTargetTableId(e.target.value)}
                                     required
@@ -71,7 +71,7 @@ export function AddRelationDialog({
                             </div>
                             <div className="space-y-2">
                                 <Label>Target Column</Label>
-                                <select name="toColumnId" className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" required disabled={!targetTableId}>
+                                <select name="toColumnId" className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground dark:bg-slate-900 dark:border-slate-700" required disabled={!targetTableId}>
                                     <option value="">Select Column</option>
                                     {targetColumns.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                                 </select>

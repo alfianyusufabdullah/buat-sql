@@ -20,7 +20,9 @@ export function AddTableDialog({ fetcher: propFetcher }: AddTableDialogProps) {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button size="sm" className="shadow-sm transition-all hover:shadow-md active:scale-95"><Plus className="mr-2 h-4 w-4" /> Add Table</Button>
+                <Button variant="outline" size="sm" className="h-9 gap-2 font-medium border-slate-200 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 transition-all">
+                    <Plus className="mr-2 h-4 w-4" /> Add Table
+                </Button>
             </DialogTrigger>
             <DialogContent>
                 <fetcher.Form method="post">

@@ -11,7 +11,7 @@ import type { EditColumnDialogProps } from "./types";
 
 export function EditColumnDialog({ column, table, eligibleTables, allColumns, relations, enums, fetcher: propFetcher }: EditColumnDialogProps) {
     const fetcher = useFetcher();
-    
+
     const existingRelation = relations?.find((r) => r.fromColumnId === column.id);
 
     const [isFk, setIsFk] = useState(!!existingRelation);
@@ -38,17 +38,17 @@ export function EditColumnDialog({ column, table, eligibleTables, allColumns, re
             <DialogTrigger asChild>
                 <div
                     id={column.id}
-                    className="flex justify-between text-xs py-1.5 px-2 rounded hover:bg-slate-100 group cursor-pointer transition-colors"
+                    className="flex justify-between text-xs py-1.5 px-2 rounded hover:bg-slate-100 dark:hover:bg-slate-800/80 group cursor-pointer transition-colors"
                 >
                     <div className="flex items-center gap-2">
-                        {column.isPk && <div className="w-1 h-3 bg-yellow-400 rounded-full" title="Primary Key" />}
-                        {!column.isPk && <div className="w-1 h-3 bg-slate-200 rounded-full" />}
+                        {column.isPk && <div className="w-1 h-3 bg-yellow-400 dark:bg-yellow-500 rounded-full" title="Primary Key" />}
+                        {!column.isPk && <div className="w-1 h-3 bg-slate-200 dark:bg-slate-700 rounded-full" />}
 
-                        <span className={`font-medium ${column.isPk ? "text-slate-900" : "text-slate-600"}`}>{column.name}</span>
-                        {column.isPk && <span className="text-[9px] px-1 py-0.5 bg-yellow-100 text-yellow-700 rounded font-bold uppercase tracking-wide">PK</span>}
-                        {existingRelation && <span className="text-[9px] px-1 py-0.5 bg-orange-100 text-orange-700 rounded font-bold uppercase tracking-wide">FK</span>}
+                        <span className={`font-medium ${column.isPk ? "text-slate-900 dark:text-slate-100" : "text-slate-600 dark:text-slate-200"}`}>{column.name}</span>
+                        {column.isPk && <span className="text-[9px] px-1 py-0.5 bg-yellow-100 dark:bg-yellow-900/80 text-yellow-700 dark:text-yellow-100 rounded font-bold uppercase tracking-wide">PK</span>}
+                        {existingRelation && <span className="text-[9px] px-1 py-0.5 bg-orange-100 dark:bg-orange-900/80 text-orange-700 dark:text-orange-100 rounded font-bold uppercase tracking-wide">FK</span>}
                     </div>
-                    <span className="text-muted-foreground text-[10px] font-mono tracking-tight">{column.type}</span>
+                    <span className="text-muted-foreground dark:text-slate-400 text-[10px] font-mono tracking-tight">{column.type}</span>
                 </div>
             </DialogTrigger>
             <DialogContent className="sm:max-w-md">
