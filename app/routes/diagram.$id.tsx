@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { type LoaderFunctionArgs, type ActionFunctionArgs, useLoaderData, useFetcher } from "react-router";
 import { diagramService } from "~/services/diagram.service";
 import { Button } from "~/components/ui/button";
@@ -98,26 +98,44 @@ export default function DiagramEditor() {
         setIsPanning
     } = useDiagramCanvas(tables, enums);
 
-    const handleStop = (e: any, data: any, id: string) => {
+    const handleStop = useCallback((e: any, data: any, id: string) => {
         const isEnum = enums.some(en => en.id === id);
         fetcher.submit(
             { intent: isEnum ? "moveEnum" : "moveTable", id, x: data.x, y: data.y },
             { method: "post" }
         );
-    };
+    }, [enums, fetcher]);
+
+    // Pre-compute column lookups once - O(1) instead of O(n) per table
+    const columnsByTable = useMemo(() => {
+        const map = new Map<string, typeof columns>();
+        for (const col of columns) {
+            if (!map.has(col.tableId)) {
+                map.set(col.tableId, []);
+            }
+            map.get(col.tableId)!.push(col);
+        }
+        return map;
+    }, [columns]);
+
+    // Pre-compute enum values lookups once
+    const valuesByEnum = useMemo(() => {
+        const map = new Map<string, typeof enumValues>();
+        for (const val of enumValues) {
+            if (!map.has(val.enumId)) {
+                map.set(val.enumId, []);
+            }
+            map.get(val.enumId)!.push(val);
+        }
+        return map;
+    }, [enumValues]);
 
     const { theme } = useTheme();
-    // Use state for dotColor to ensure proper SSR hydration and reactivity
-    const [dotColor, setDotColor] = useState("#334155"); // Default to dark
+    // Direct computation - no need for useEffect + setTimeout
+    const dotColor = useMemo(() => {
+        return theme === "dark" ? "#334155" : "#cbd5e1";
+    }, [theme]);
 
-    useEffect(() => {
-        // Small timeout to ensure ThemeProvider has updated the DOM class
-        const timer = setTimeout(() => {
-            const isDark = document.documentElement.classList.contains("dark");
-            setDotColor(isDark ? "#334155" : "#cbd5e1");
-        }, 0);
-        return () => clearTimeout(timer);
-    }, [theme]); // Re-run when theme changes
 
     return (
         <div className="h-screen flex flex-col overflow-hidden bg-slate-50 dark:bg-slate-950 transition-colors">
@@ -168,7 +186,7 @@ export default function DiagramEditor() {
                         }}
                     >
                         {tables.map(table => {
-                            const tableColumns = columns.filter(c => c.tableId === table.id);
+                            const tableColumns = columnsByTable.get(table.id) ?? [];
                             return (
                                 <DraggableTable
                                     key={table.id}
@@ -188,7 +206,7 @@ export default function DiagramEditor() {
                         })}
 
                         {enums.map(en => {
-                            const values = enumValues.filter(v => v.enumId === en.id);
+                            const values = valuesByEnum.get(en.id) ?? [];
                             return (
                                 <EnumNode
                                     key={en.id}
