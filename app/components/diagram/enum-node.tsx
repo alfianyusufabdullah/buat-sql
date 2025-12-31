@@ -25,12 +25,12 @@ const TABLE_WIDTH = CONFIG.TABLE_WIDTH;
 const TABLE_PADDING = CONFIG.TABLE_PADDING;
 
 const colors = [
-    { name: 'Emerald', value: '#10b981', bg: 'bg-emerald-100', border: 'border-emerald-200', text: 'text-emerald-700' },
-    { name: 'Blue', value: '#3b82f6', bg: 'bg-blue-100', border: 'border-blue-200', text: 'text-blue-700' },
-    { name: 'Purple', value: '#a855f7', bg: 'bg-purple-100', border: 'border-purple-200', text: 'text-purple-700' },
-    { name: 'Orange', value: '#f97316', bg: 'bg-orange-100', border: 'border-orange-200', text: 'text-orange-700' },
-    { name: 'Pink', value: '#ec4899', bg: 'bg-pink-100', border: 'border-pink-200', text: 'text-pink-700' },
-    { name: 'Slate', value: '#64748b', bg: 'bg-slate-100', border: 'border-slate-200', text: 'text-slate-700' },
+    { name: 'Emerald', value: '#10b981', bg: 'bg-emerald-50', darkBg: 'dark:bg-emerald-900/30', border: 'border-emerald-200', darkBorder: 'dark:border-emerald-800/50', text: 'text-emerald-700', darkText: 'dark:text-emerald-100' },
+    { name: 'Blue', value: '#3b82f6', bg: 'bg-blue-50', darkBg: 'dark:bg-blue-900/30', border: 'border-blue-200', darkBorder: 'dark:border-blue-800/50', text: 'text-blue-700', darkText: 'dark:text-blue-100' },
+    { name: 'Purple', value: '#a855f7', bg: 'bg-purple-50', darkBg: 'dark:bg-purple-900/30', border: 'border-purple-200', darkBorder: 'dark:border-purple-800/50', text: 'text-purple-700', darkText: 'dark:text-purple-100' },
+    { name: 'Orange', value: '#f97316', bg: 'bg-orange-50', darkBg: 'dark:bg-orange-900/30', border: 'border-orange-200', darkBorder: 'dark:border-orange-800/50', text: 'text-orange-700', darkText: 'dark:text-orange-100' },
+    { name: 'Pink', value: '#ec4899', bg: 'bg-pink-50', darkBg: 'dark:bg-pink-900/30', border: 'border-pink-200', darkBorder: 'dark:border-pink-800/50', text: 'text-pink-700', darkText: 'dark:text-pink-100' },
+    { name: 'Slate', value: '#64748b', bg: 'bg-slate-50', darkBg: 'dark:bg-slate-900/30', border: 'border-slate-200', darkBorder: 'dark:border-slate-800/50', text: 'text-slate-700', darkText: 'dark:text-slate-100' },
 ];
 
 export function EnumNode({ enumData, enumValues, allEnums, allTables, allColumns, allEnumValues, onStop, updateArrows, fetcher: propFetcher, scale }: EnumNodeProps) {
@@ -165,16 +165,16 @@ export function EnumNode({ enumData, enumValues, allEnums, allTables, allColumns
             <div
                 ref={nodeRef}
                 id={`enum-${enumData.id}`}
-                className={`absolute w-48 bg-white rounded-lg shadow-sm border rounded-lg z-20 overflow-hidden group select-none transition-shadow hover:shadow-md ${currentColor.border}`}
+                className={`absolute w-48 bg-white dark:bg-slate-900/95 rounded-lg shadow-sm border z-20 overflow-hidden group select-none transition-shadow hover:shadow-md ${currentColor.border} ${currentColor.darkBorder}`}
             >
                 <ContextMenu>
                     <ContextMenuTrigger>
                         {/* Header */}
                         <div
-                            className={`enum-handle px-3 py-2 flex items-center justify-between cursor-grab active:cursor-grabbing border-b transition-colors ${currentColor.bg} ${currentColor.border}`}
+                            className={`enum-handle px-3 py-2 flex items-center justify-between cursor-grab active:cursor-grabbing border-b transition-colors ${currentColor.bg} ${currentColor.darkBg} ${currentColor.border} ${currentColor.darkBorder}`}
                         >
                             <div className="flex items-center gap-2">
-                                <span className={`font-bold text-xs uppercase tracking-wider truncate max-w-[100px] ${currentColor.text}`}>{enumData.name}</span>
+                                <span className={`font-bold text-xs uppercase tracking-wider truncate max-w-[100px] ${currentColor.text} ${currentColor.darkText}`}>{enumData.name}</span>
                             </div>
                             <div className="flex items-center gap-1">
                                 <Dialog open={isEditing} onOpenChange={setIsEditing}>
@@ -223,14 +223,14 @@ export function EnumNode({ enumData, enumValues, allEnums, allTables, allColumns
                         </div>
 
                         {/* Values */}
-                        <div className="py-1">
+                        <div className="py-1 bg-white dark:bg-slate-900 rounded-b-lg">
                             {enumValues.length === 0 ? (
-                                <div className="px-4 py-3 text-[10px] text-slate-400 italic text-center">No values defined</div>
+                                <div className="px-4 py-3 text-[10px] text-slate-400 dark:text-slate-500 italic text-center">No values defined</div>
                             ) : (
                                 enumValues.map((v) => (
-                                    <div key={v.id} className="px-4 py-1.5 flex items-center gap-2 border-b border-slate-50 last:border-0 hover:bg-slate-50 transition-colors">
-                                        <div className={`w-1 h-1 rounded-full ${currentColor.bg.replace('100', '500')}`} />
-                                        <span className="text-[11px] text-slate-600 font-medium truncate">{v.value}</span>
+                                    <div key={v.id} className="px-4 py-1.5 flex items-center gap-2 border-b border-slate-50 dark:border-slate-800/50 last:border-0 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                                        <div className={`w-1 h-1 rounded-full ${currentColor.bg.replace('50', '500').replace('bg-', 'bg-')}`} />
+                                        <span className="text-[11px] text-slate-600 dark:text-slate-100 font-medium truncate">{v.value}</span>
                                     </div>
                                 ))
                             )}
@@ -251,7 +251,7 @@ export function EnumNode({ enumData, enumValues, allEnums, allTables, allColumns
                             </ContextMenuSubContent>
                         </ContextMenuSub>
                         <ContextMenuSeparator />
-                        <ContextMenuItem onClick={handleDelete} className="text-red-500 focus:text-red-500 focus:bg-red-50">
+                        <ContextMenuItem onClick={handleDelete} variant="destructive">
                             <Trash2 className="w-4 h-4 mr-2" /> Delete ENUM
                         </ContextMenuItem>
                     </ContextMenuContent>

@@ -21,17 +21,18 @@ const ENUM_WIDTH = CONFIG.ENUM_WIDTH;
 const TABLE_PADDING = CONFIG.TABLE_PADDING;
 
 const colors = [
-    { name: 'Slate', value: 'slate', bg: 'bg-slate-100', border: 'border-slate-200' },
-    { name: 'Blue', value: 'blue', bg: 'bg-blue-100', border: 'border-blue-200' },
-    { name: 'Green', value: 'green', bg: 'bg-green-100', border: 'border-green-200' },
-    { name: 'Red', value: 'red', bg: 'bg-red-100', border: 'border-red-200' },
-    { name: 'Yellow', value: 'yellow', bg: 'bg-yellow-100', border: 'border-yellow-200' },
-    { name: 'Purple', value: 'purple', bg: 'bg-purple-100', border: 'border-purple-200' },
-    { name: 'Pink', value: 'pink', bg: 'bg-pink-100', border: 'border-pink-200' },
-    { name: 'Orange', value: 'orange', bg: 'bg-orange-100', border: 'border-orange-200' },
+    { name: 'Slate', value: 'slate', bg: 'bg-slate-50', darkBg: 'dark:bg-slate-900', border: 'border-slate-200', darkBorder: 'dark:border-slate-800', text: 'text-slate-900', darkText: 'dark:text-slate-100' },
+    { name: 'Blue', value: 'blue', bg: 'bg-blue-50', darkBg: 'dark:bg-blue-900/30', border: 'border-blue-200', darkBorder: 'dark:border-blue-800/50', text: 'text-blue-900', darkText: 'dark:text-blue-100' },
+    { name: 'Green', value: 'green', bg: 'bg-green-50', darkBg: 'dark:bg-green-900/30', border: 'border-green-200', darkBorder: 'dark:border-green-800/50', text: 'text-green-900', darkText: 'dark:text-green-100' },
+    { name: 'Red', value: 'red', bg: 'bg-red-50', darkBg: 'dark:bg-red-900/30', border: 'border-red-200', darkBorder: 'dark:border-red-800/50', text: 'text-red-900', darkText: 'dark:text-red-100' },
+    { name: 'Yellow', value: 'yellow', bg: 'bg-yellow-50', darkBg: 'dark:bg-yellow-900/30', border: 'border-yellow-200', darkBorder: 'dark:border-yellow-800/50', text: 'text-yellow-900', darkText: 'dark:text-yellow-100' },
+    { name: 'Purple', value: 'purple', bg: 'bg-purple-50', darkBg: 'dark:bg-purple-900/30', border: 'border-purple-200', darkBorder: 'dark:border-purple-800/50', text: 'text-purple-900', darkText: 'dark:text-purple-100' },
+    { name: 'Pink', value: 'pink', bg: 'bg-pink-50', darkBg: 'dark:bg-pink-900/30', border: 'border-pink-200', darkBorder: 'dark:border-pink-800/50', text: 'text-pink-900', darkText: 'dark:text-pink-100' },
+    { name: 'Orange', value: 'orange', bg: 'bg-orange-50', darkBg: 'dark:bg-orange-900/30', border: 'border-orange-200', darkBorder: 'dark:border-orange-800/50', text: 'text-orange-900', darkText: 'dark:text-orange-100' },
 ];
 
 export function DraggableTable({ table, columns, allTables, allColumns, relations, onStop, updateArrows, fetcher, scale, enums, allEnumValues }: DraggableTableProps) {
+    // ... logic remains same ...
     const nodeRef = useRef<HTMLDivElement>(null);
     const [isFk, setIsFk] = useState(false);
     const [selectedFkTableId, setSelectedFkTableId] = useState<string>("");
@@ -41,6 +42,7 @@ export function DraggableTable({ table, columns, allTables, allColumns, relation
         setIsFk(false);
         setSelectedFkTableId("");
     }, []);
+
     const getTableHeight = (columnCount: number) => {
         const headerHeight = 40;
         const columnHeight = 28;
@@ -151,15 +153,15 @@ export function DraggableTable({ table, columns, allTables, allColumns, relation
             <div
                 ref={nodeRef}
                 id={table.id}
-                className={`absolute w-64 bg-white border rounded-lg shadow-sm z-10 transition-colors ${currentColor.border}`}
+                className={`absolute w-64 bg-white dark:bg-slate-900/95 border rounded-lg shadow-sm z-10 transition-colors ${currentColor.border} ${currentColor.darkBorder}`}
             >
                 <ContextMenu>
                     <ContextMenuTrigger>
-                        <div className={`p-2 border-b rounded-t-lg flex items-center justify-between drag-handle cursor-grab active:cursor-grabbing transition-colors ${currentColor.bg} ${currentColor.border}`}>
-                            <span className="font-bold text-sm truncate">{table.name}</span>
+                        <div className={`p-2 border-b rounded-t-lg flex items-center justify-between drag-handle cursor-grab active:cursor-grabbing transition-colors ${currentColor.bg} ${currentColor.darkBg} ${currentColor.border} ${currentColor.darkBorder}`}>
+                            <span className={`font-bold text-sm truncate ${currentColor.text} ${currentColor.darkText}`}>{table.name}</span>
                             <GripVertical className="h-4 w-4 text-muted-foreground/50" />
                         </div>
-                        <div className="py-2">
+                        <div className="py-2 bg-white dark:bg-slate-900 rounded-b-lg">
                             {columns.map((col) => (
                                 <EditColumnDialog
                                     key={col.id}
@@ -200,7 +202,7 @@ export function DraggableTable({ table, columns, allTables, allColumns, relation
                             </ContextMenuSubContent>
                         </ContextMenuSub>
                         <ContextMenuSeparator />
-                        <ContextMenuItem onClick={handleDelete} className="text-red-500 focus:text-red-500 focus:bg-red-50">
+                        <ContextMenuItem onClick={handleDelete} variant="destructive">
                             <Trash className="w-4 h-4 mr-2" /> Delete Table
                         </ContextMenuItem>
                     </ContextMenuContent>
