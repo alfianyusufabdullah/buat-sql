@@ -18,7 +18,7 @@ import {
 } from "~/components/ui/context-menu";
 import { type EnumNodeProps } from "./types";
 
-import { CONFIG } from "~/lib/utils";
+import { CONFIG, snapToGrid } from "~/lib/utils";
 
 const ENUM_WIDTH = CONFIG.ENUM_WIDTH;
 const TABLE_WIDTH = CONFIG.TABLE_WIDTH;
@@ -105,7 +105,9 @@ export function EnumNode({ enumData, enumValues, allEnums, allTables, allColumns
     };
 
     const handleDragStop = () => {
-        onStop({} as any, { x: position.x, y: position.y }, enumData.id);
+        const snapped = snapToGrid(position.x, position.y);
+        setPosition(snapped);
+        onStop({} as any, { x: snapped.x, y: snapped.y }, enumData.id);
     };
 
     const handleAddValue = () => {
@@ -157,7 +159,6 @@ export function EnumNode({ enumData, enumValues, allEnums, allTables, allColumns
             position={position}
             onDrag={handleDrag}
             onStop={handleDragStop}
-            grid={[1, 1]}
             scale={scale}
             handle=".enum-handle"
         >

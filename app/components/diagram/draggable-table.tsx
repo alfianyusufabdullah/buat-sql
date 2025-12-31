@@ -14,7 +14,7 @@ import {
 import { EditColumnDialog } from "./edit-column-dialog";
 import { AddColumnDialog } from "./add-column-dialog";
 import type { DraggableTableProps, ColumnData } from "./types";
-import { CONFIG } from "~/lib/utils";
+import { CONFIG, snapToGrid } from "~/lib/utils";
 
 const TABLE_WIDTH = CONFIG.TABLE_WIDTH;
 const ENUM_WIDTH = CONFIG.ENUM_WIDTH;
@@ -114,7 +114,9 @@ export function DraggableTable({ table, columns, allTables, allColumns, relation
     };
 
     const handleDragStop = () => {
-        onStop({} as any, { x: position.x, y: position.y }, table.id);
+        const snapped = snapToGrid(position.x, position.y);
+        setPosition(snapped);
+        onStop({} as any, { x: snapped.x, y: snapped.y }, table.id);
     };
 
     const currentColor = colors.find(c => c.value === table.color) || colors[0];
