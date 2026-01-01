@@ -24,6 +24,7 @@ export const columns = sqliteTable("columns", {
     isPk: integer("is_pk", { mode: "boolean" }).default(false),
     isNullable: integer("is_nullable", { mode: "boolean" }).default(false),
     enumId: text("enum_id").references(() => enums.id, { onDelete: 'set null' }),
+    defaultValue: text("default_value"), // e.g. "uuid()", "now()", or literal value
 });
 
 export const enums = sqliteTable("enums", {

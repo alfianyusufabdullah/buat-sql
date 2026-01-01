@@ -15,6 +15,20 @@
       "when": 1767083028174,
       "tag": "0001_burly_chimera",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1767273573068,
+      "tag": "0002_powerful_black_cat",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1767274000000,
+      "tag": "0003_add_default_value",
+      "breakpoints": true
     }
   ]
 }
